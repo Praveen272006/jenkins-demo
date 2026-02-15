@@ -2,22 +2,36 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
-                echo 'Checking out code from GitHub...'
+                echo 'Checking out code...'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building project from Jenkinsfile...'
+                echo 'Compiling Java program...'
+                bat 'javac Hello.java'
             }
         }
 
-        stage('Test') {
+        stage('Test Run') {
             steps {
-                echo 'Testing project from Jenkinsfile...'
+                echo 'Running Java program...'
+                bat 'java Hello'
             }
+        }
+    }
+
+    post {
+        success {
+            archiveArtifacts artifacts: '*.class'
+            echo 'CI Pipeline Successful ✅'
+        }
+
+        failure {
+            echo 'CI Pipeline Failed ❌'
         }
     }
 }
